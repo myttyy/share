@@ -1,0 +1,45 @@
+wx4d8dd9ff994ab958
+
+  {
+       "name": "leancloud-storage",
+       "path": "../leancloud-storage"
+    }
+
+    
+    ,
+    {
+      "name": "leancloud-storage",
+      "path": "../leancloud-storage"
+    }
+
+
+    application/json;charset=UTF-8
+
+
+     key: 'getResponseHeader',
+                    value: function getResponseHeader(header) {
+                      return _responseHeader.get(this)[header] ? _responseHeader.get(this)[header] : "application/json;charset=utf-8";
+
+
+
+                          wx.getShareInfo({
+              shareTicket: res.shareTickets,
+              success: function (data){
+                console.log("得到信息" + data);
+                var iv = data.iv;
+                var encrpteData = data.encryptedData;
+                AV.Cloud.run('share', {
+                  gameId: 1002, openId: "oARfm5Thn5gqtpSQ5vllfFVsRLuo",
+                  sessionKey: "C+v8pUl3CUFNhYsYsmZd+w==",
+                  iv: data.iv,
+                  encryptedData: data.encryptedData
+                }).then(function (data) {
+                  console.log(data + "分享数据")
+                }, function (err) {
+
+                })
+              }
+            })
+
+
+            undefined is not an object
