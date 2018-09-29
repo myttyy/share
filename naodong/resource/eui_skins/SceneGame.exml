@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="SceneGameSkin" width="720" height="1280" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing" xmlns:ns1="*" >
+	<w:Config id="165c792cab5" ></w:Config>
+	<e:Group right="0" left="0" bottom="0" top="0">
+		<e:Group scaleX="1" scaleY="1" width="720" height="1280" horizontalCenter="0" verticalCenter="0">
+			<e:Image id="gameBg" left="0" bottom="0" right="0" top="0" source="gameBg_jpg"/>
+			<e:Group id="group_Help" width="720" height="180" y="0" horizontalCenter="0" anchorOffsetX="0" anchorOffsetY="0">
+			<e:Button id="btn_Level" label="" x="11" y="151" enabled="true" width="109" height="111" anchorOffsetX="0" anchorOffsetY="0">
+				<e:skinName>
+					<e:Skin states="up,down,disabled">
+					<e:Image width="100%" height="100%" source="guanka_png"/>
+					<e:Label id="labelDisplay" horizontalCenter="0" verticalCenter="0"/>
+					</e:Skin>
+				</e:skinName>
+			</e:Button>
+			<e:Button id="btn_result" label="" y="506" enabled="true" width="207" height="76" anchorOffsetX="103" anchorOffsetY="38" x="360">
+				<e:skinName>
+					<e:Skin states="up,down,disabled">
+					<e:Image width="100%" height="100%" source="danan_png"/>
+					<e:Label id="labelDisplay" horizontalCenter="0" verticalCenter="0"/>
+					</e:Skin>
+				</e:skinName>
+			</e:Button>
+			</e:Group>
+			<e:Label id="label_Question" text="      小明的爷爷七十岁小明的爷                爷七十岁小明的爷爷七十岁小明的爷爷七十岁小明的爷爷七十岁" y="303" anchorOffsetY="0" height="146" anchorOffsetX="0" width="550" fontFamily="Microsoft YaHei" size="35" verticalAlign="top" textAlign="left" textColor="0xf7f7f7" bold="true" x="85"/>
+			<e:Group id="group_Result" width="624" height="116.42" y="565" anchorOffsetX="0" anchorOffsetY="0" x="53">
+			<ns1:AnswerWord width="113" height="117" x="0" y="37"/>
+				<ns1:AnswerWord width="113" height="117" x="10" y="47"/>
+			<e:layout>
+				<e:HorizontalLayout horizontalAlign="center"/>
+			</e:layout>
+			</e:Group>
+			<e:Group id="group_Chaotic" width="636" height="400" y="680" anchorOffsetX="0" anchorOffsetY="0" x="65">
+			<ns1:Word width="113" height="117" x="203" y="349"/>
+			<ns1:Word width="123" height="135" x="283" y="429"/>
+			<ns1:Word width="123" height="135" x="293" y="439"/>
+			<ns1:Word width="123" height="135" x="213" y="359"/>
+			<ns1:Word width="123" height="135" x="223" y="369"/>
+			<ns1:Word width="123" height="135" x="233" y="379"/>
+			<ns1:Word width="123" height="135" x="243" y="389"/>
+			<ns1:Word width="123" height="135" x="253" y="399"/>
+			<ns1:Word width="123" height="135" x="263" y="409"/>
+			<ns1:Word width="123" height="135" x="273" y="419"/>
+			<ns1:Word width="123" height="135" x="283" y="429"/>
+			<ns1:Word width="123" height="135" x="293" y="439"/>
+			<ns1:Word width="123" height="135" x="303" y="449"/>
+			<ns1:Word width="123" height="135" x="313" y="459"/>
+			<ns1:Word width="123" height="135" x="323" y="469"/>
+				<e:layout>
+					<e:TileLayout horizontalGap="3"/>
+				</e:layout>
+			</e:Group>
+			<e:Label id="labelLevel" text="999" y="267" width="100" height="100" verticalAlign="middle" size="30" fontFamily="Microsoft YaHei" textColor="0x000000" anchorOffsetY="50" textAlign="center" anchorOffsetX="50" x="353"/>
+			<ns1:Bingo id="bingoLayer" width="720" height="1280" x="0" y="0" alpha="1" enabled="true" visible="false"/>
+			<ns1:LevelScene id="levelScene" width="720" height="1280" x="0" y="0" enabled="true" visible="false"/>
+			<e:Group width="522" height="183" y="1094" horizontalCenter="0" visible="false"/>
+		</e:Group>
+	</e:Group>
+</e:Skin>
