@@ -188,24 +188,25 @@ class SceneGame extends eui.Component implements  eui.UIComponent {
 	{
 		egret.Tween.get(event.currentTarget).to({scaleX:1.2,scaleY:1.2},100).
 		to({scaleX:1,scaleY:1},100);
-		if(LevelDataManager.isShare == true)
-		{
-			platform.updateShareMenu();
-		}
-		else if(LevelDataManager.isShare == false)
-		{
-		  SoundManager.getInstance().windowSoundChanel = SoundManager.getInstance().windowSound.play(0, 1);
-          SoundManager.getInstance().windowSoundChanel.volume = 1;
-          SceneGame.getInstance().bingoLayer.visible = true;
-          SceneGame.getInstance().bingoLayer.trueGroup.visible = true;
-          SceneGame.getInstance().bingoLayer.daandi.visible = true;
-          SceneGame.getInstance().hintBg(true);
-          SceneGame.getInstance().bingoLayer.labelresult.text =
-          LevelDataManager.getInstance().GetLevelData(LevelDataManager.getInstance().curIcon).result;
-          SceneGame.getInstance().bingoLayer.labelExplain.text = "解释:   " +
-          LevelDataManager.getInstance().GetLevelData(LevelDataManager.getInstance().curIcon).explain + "   ";
-          console.log("result" + LevelDataManager.getInstance().GetLevelData(LevelDataManager.getInstance().curIcon).result);
-		}
+		platform.updateShareMenu();
+		// if(LevelDataManager.isShare == true)
+		// {
+		// 	platform.updateShareMenu();
+		// }
+		// else if(LevelDataManager.isShare == false)
+		// {
+		//   SoundManager.getInstance().windowSoundChanel = SoundManager.getInstance().windowSound.play(0, 1);
+        //   SoundManager.getInstance().windowSoundChanel.volume = 1;
+        //   SceneGame.getInstance().bingoLayer.visible = true;
+        //   SceneGame.getInstance().bingoLayer.trueGroup.visible = true;
+        //   SceneGame.getInstance().bingoLayer.daandi.visible = true;
+        //   SceneGame.getInstance().hintBg(true);
+        //   SceneGame.getInstance().bingoLayer.labelresult.text =
+        //   LevelDataManager.getInstance().GetLevelData(LevelDataManager.getInstance().curIcon).result;
+        //   SceneGame.getInstance().bingoLayer.labelExplain.text = "解释:   " +
+        //   LevelDataManager.getInstance().GetLevelData(LevelDataManager.getInstance().curIcon).explain + "   ";
+        //   console.log("result" + LevelDataManager.getInstance().GetLevelData(LevelDataManager.getInstance().curIcon).result);
+		// }
 		
 		
 	}

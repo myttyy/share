@@ -95,8 +95,8 @@ var WeChatPlatform = (function () {
                             return __generator(this, function (_a) {
                                 AV.Cloud.run('conf').then(function (data) {
                                     //成功逻辑
-                                    console.log("开关开启，分享开启" + data.share);
                                     if (data.share == true) {
+                                        console.log("开关开启，分享开启" + data.share);
                                         // SceneGame.getInstance().bingoLayer.btn_share.visible = true;
                                         LevelDataManager.isShare = true;
                                     }
@@ -134,13 +134,45 @@ var WeChatPlatform = (function () {
                                             var userInfo = user.toJSON();
                                             LevelDataManager.openId = userInfo.authData.lc_weapp.openid;
                                             LevelDataManager.sessionKey = userInfo.authData.lc_weapp.session_key;
+                                            resolve(userInfo);
                                             console.log(userInfo);
                                             console.log(LevelDataManager.openId);
                                             console.log(LevelDataManager.sessionKey);
-                                            resolve(userInfo);
                                         }).catch(function () { });
                                         return [2 /*return*/];
                                 }
+                            });
+                        });
+                    })];
+            });
+        });
+    };
+    WeChatPlatform.prototype.AVshare = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, new Promise(function (resole, reject) {
+                        return __awaiter(this, void 0, void 0, function () {
+                            var pajson;
+                            return __generator(this, function (_a) {
+                                pajson = {
+                                    gameId: 1002,
+                                    openId: LevelDataManager.openId,
+                                    sessionKey: LevelDataManager.sessionKey,
+                                    iv: LevelDataManager.iv,
+                                    encryptedData: LevelDataManager.encryptedData
+                                };
+                                console.log("gameId  " + pajson.gameId);
+                                console.log("openId  " + pajson.openId);
+                                console.log("sessionKey " + pajson.sessionKey);
+                                console.log("iv  " + pajson.iv);
+                                console.log("evcryteData   " + pajson.encryptedData);
+                                AV.Cloud.run("share", pajson).then(function (data) {
+                                    console.log(data + "分享成功data");
+                                    console.log(data.openId + "分享成功dataOPenID");
+                                    resole(data);
+                                }, function (err) {
+                                });
+                                return [2 /*return*/];
                             });
                         });
                     })];
@@ -208,7 +240,9 @@ var WeChatPlatform = (function () {
     };
     WeChatPlatform.prototype.updateShareMenu = function () {
         return __awaiter(this, void 0, void 0, function () {
+            var self;
             return __generator(this, function (_a) {
+                self = this;
                 wx.shareAppMessage({
                     title: "小学生都能答出的脑筋急转弯，看看你能答对多少？",
                     imageUrl: "resource/assets/common/title11.png",
@@ -219,6 +253,34 @@ var WeChatPlatform = (function () {
                             console.log("转发群,分享");
                             SceneGame.getInstance().bingoLayer.visible = false;
                             SceneGame.getInstance().bingoLayer.erroGroup.visible = false;
+                            wx.getShareInfo({
+                                shareTicket: theTickets,
+                                success: function (data) {
+                                    LevelDataManager.encryptedData = data.encryptedData;
+                                    LevelDataManager.iv = data.iv;
+                                    console.log("encryptedData 得到" + LevelDataManager.encryptedData);
+                                    console.log("iv 得到" + LevelDataManager.iv);
+                                    // self.AVshare();
+                                    var pajson = {
+                                        gameId: 1002,
+                                        openId: LevelDataManager.openId,
+                                        sessionKey: LevelDataManager.sessionKey,
+                                        iv: LevelDataManager.iv,
+                                        encryptedData: LevelDataManager.encryptedData
+                                    };
+                                    console.log("gameId  " + pajson.gameId);
+                                    console.log("openId  " + pajson.openId);
+                                    console.log("sessionKey " + pajson.sessionKey);
+                                    console.log("iv  " + pajson.iv);
+                                    console.log("evcryteData   " + pajson.encryptedData);
+                                    AV.Cloud.run("share", pajson).then(function (data) {
+                                        console.log(data + "分享成功data");
+                                        console.log(data.openId + "分享成功dataOPenID");
+                                        // resole(data);
+                                    }, function (err) {
+                                    });
+                                }
+                            });
                             SoundManager.getInstance().windowSoundChanel = SoundManager.getInstance().windowSound.play(0, 1);
                             SoundManager.getInstance().windowSoundChanel.volume = 1;
                             SceneGame.getInstance().bingoLayer.visible = true;
@@ -1394,22 +1456,25 @@ var SceneGame = (function (_super) {
     SceneGame.prototype.showResult = function (event) {
         egret.Tween.get(event.currentTarget).to({ scaleX: 1.2, scaleY: 1.2 }, 100).
             to({ scaleX: 1, scaleY: 1 }, 100);
-        if (LevelDataManager.isShare == true) {
-            platform.updateShareMenu();
-        }
-        else if (LevelDataManager.isShare == false) {
-            SoundManager.getInstance().windowSoundChanel = SoundManager.getInstance().windowSound.play(0, 1);
-            SoundManager.getInstance().windowSoundChanel.volume = 1;
-            SceneGame.getInstance().bingoLayer.visible = true;
-            SceneGame.getInstance().bingoLayer.trueGroup.visible = true;
-            SceneGame.getInstance().bingoLayer.daandi.visible = true;
-            SceneGame.getInstance().hintBg(true);
-            SceneGame.getInstance().bingoLayer.labelresult.text =
-                LevelDataManager.getInstance().GetLevelData(LevelDataManager.getInstance().curIcon).result;
-            SceneGame.getInstance().bingoLayer.labelExplain.text = "解释:   " +
-                LevelDataManager.getInstance().GetLevelData(LevelDataManager.getInstance().curIcon).explain + "   ";
-            console.log("result" + LevelDataManager.getInstance().GetLevelData(LevelDataManager.getInstance().curIcon).result);
-        }
+        platform.updateShareMenu();
+        // if(LevelDataManager.isShare == true)
+        // {
+        // 	platform.updateShareMenu();
+        // }
+        // else if(LevelDataManager.isShare == false)
+        // {
+        //   SoundManager.getInstance().windowSoundChanel = SoundManager.getInstance().windowSound.play(0, 1);
+        //   SoundManager.getInstance().windowSoundChanel.volume = 1;
+        //   SceneGame.getInstance().bingoLayer.visible = true;
+        //   SceneGame.getInstance().bingoLayer.trueGroup.visible = true;
+        //   SceneGame.getInstance().bingoLayer.daandi.visible = true;
+        //   SceneGame.getInstance().hintBg(true);
+        //   SceneGame.getInstance().bingoLayer.labelresult.text =
+        //   LevelDataManager.getInstance().GetLevelData(LevelDataManager.getInstance().curIcon).result;
+        //   SceneGame.getInstance().bingoLayer.labelExplain.text = "解释:   " +
+        //   LevelDataManager.getInstance().GetLevelData(LevelDataManager.getInstance().curIcon).explain + "   ";
+        //   console.log("result" + LevelDataManager.getInstance().GetLevelData(LevelDataManager.getInstance().curIcon).result);
+        // }
     };
     return SceneGame;
 }(eui.Component));

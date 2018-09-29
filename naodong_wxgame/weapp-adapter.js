@@ -1251,12 +1251,12 @@
                 }, {
                     key: 'getAllResponseHeaders',
                     value: function getAllResponseHeaders() {
-                        var responseHeader = _responseHeader.get(this);
+                         var responseHeader = _responseHeader.get(this);
 
-                        return Object.keys(responseHeader).map(function (header) {
+                         return Object.keys(responseHeader).map(function (header) {
                             return header + ': ' + responseHeader[header];
                         }).join('\n');
-                    }
+                    } 
                 }, {
                     key: 'getResponseHeader',
                     value: function getResponseHeader(header) {
