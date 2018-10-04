@@ -177,18 +177,14 @@ class WeChatPlatform implements Platform {
                             console.log("sessionKey " + pajson.sessionKey);
                             console.log("iv  " + pajson.iv);
                             console.log("evcryteData   " + pajson.encryptedData);
-                            AV.Cloud.run("share", pajson).then(function (data) {//用一个对象数组存。每次得到遍历数组中是否有openId相同。
+                            AV.Cloud.run("share", pajson).then(function (data) {
                                 console.log(data + "分享成功data");
                                 for (var key1 in data) {
                                     console.log(key1 + "why");//输出can_share
-                                    console.log(key1);
                                     var canShare = key1;
                                     console.log(data[canShare] + "这里面的指")
                                 }
-                                
                                 console.log("转发群,分享");
-                                console.log(canShare + "分享成功dataCAN_SHARE");//到这里不出现了   应该是can_share
-                                console.log(data.canShare + "aaaaaa");
                                 if(data[canShare] == true)
                                 {
                                 SceneGame.getInstance().bingoLayer.visible = false;
@@ -225,7 +221,7 @@ class WeChatPlatform implements Platform {
 
                             },
                                 function (err) {
-                            console.log("函数调用失败3333333");
+                            console.log("函数调用失败23333333");
                                 });
                         }
                     });

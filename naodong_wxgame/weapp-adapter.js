@@ -1261,7 +1261,7 @@
                     key: 'getResponseHeader',
                     value: function getResponseHeader(header) {
                       return _responseHeader.get(this)[header] ? _responseHeader.get(this)[header] : "application/json;charset=utf-8";
-                    }
+                    } 
                 }, {
                     key: 'open',
                     value: function open(method, url /* async, user, password 这几个参数在小程序内不支持*/) {

@@ -52,7 +52,7 @@ class SceneGame extends eui.Component implements  eui.UIComponent {
 				 this.group_Chaotic.addChild(word);
 			 }
 		 }
-		 for(let i = 0; i < this.group_Chaotic.numChildren - 1; i++)
+		 for(let i = 0; i < this.group_Chaotic.numChildren; i++)
 		 {
 			 let wordRect = <Word>this.group_Chaotic.getChildAt(i);
 			 wordRect.SetWordText(wordList[i]);

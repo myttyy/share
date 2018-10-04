@@ -12,7 +12,6 @@ class LevelScene extends eui.Component implements  eui.UIComponent {
 	protected childrenCreated():void
 	{
 		super.childrenCreated();
-		// this.createGroup();
 		this.initMap();
 		this.btn_next.addEventListener(egret.TouchEvent.TOUCH_TAP,this.onNext,this);
 		this.btn_before.addEventListener(egret.TouchEvent.TOUCH_TAP,this.onBefore,this);

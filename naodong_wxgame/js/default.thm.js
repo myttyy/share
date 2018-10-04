@@ -1569,7 +1569,7 @@ var egret = window.egret;window.skins={};
 		t.x = 65;
 		t.y = 680;
 		t.layout = this._TileLayout1_i();
-		t.elementsContent = [this._Word1_i(),this._Word2_i(),this._Word3_i(),this._Word4_i(),this._Word5_i(),this._Word6_i(),this._Word7_i(),this._Word8_i(),this._Word9_i(),this._Word10_i(),this._Word11_i(),this._Word12_i(),this._Word13_i(),this._Word14_i(),this._Word15_i()];
+		t.elementsContent = [this._Word1_i(),this._Word2_i(),this._Word3_i(),this._Word4_i(),this._Word5_i(),this._Word6_i(),this._Word7_i(),this._Word8_i(),this._Word9_i(),this._Word10_i()];
 		return t;
 	};
 	_proto._TileLayout1_i = function () {
@@ -1655,46 +1655,6 @@ var egret = window.egret;window.skins={};
 		t.width = 123;
 		t.x = 273;
 		t.y = 419;
-		return t;
-	};
-	_proto._Word11_i = function () {
-		var t = new Word();
-		t.height = 135;
-		t.width = 123;
-		t.x = 283;
-		t.y = 429;
-		return t;
-	};
-	_proto._Word12_i = function () {
-		var t = new Word();
-		t.height = 135;
-		t.width = 123;
-		t.x = 293;
-		t.y = 439;
-		return t;
-	};
-	_proto._Word13_i = function () {
-		var t = new Word();
-		t.height = 135;
-		t.width = 123;
-		t.x = 303;
-		t.y = 449;
-		return t;
-	};
-	_proto._Word14_i = function () {
-		var t = new Word();
-		t.height = 135;
-		t.width = 123;
-		t.x = 313;
-		t.y = 459;
-		return t;
-	};
-	_proto._Word15_i = function () {
-		var t = new Word();
-		t.height = 135;
-		t.width = 123;
-		t.x = 323;
-		t.y = 469;
 		return t;
 	};
 	_proto.labelLevel_i = function () {

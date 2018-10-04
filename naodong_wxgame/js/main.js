@@ -292,7 +292,6 @@ var WeChatPlatform = (function () {
                                         console.log(data + "分享成功data");
                                         for (var key1 in data) {
                                             console.log(key1 + "why"); //输出can_share
-                                            console.log(key1);
                                             var canShare = key1;
                                             console.log(data[canShare] + "这里面的指");
                                         }
@@ -798,7 +797,6 @@ var LevelScene = (function (_super) {
     //EUI元素构建好调用。创建子对象后执行任何最终处理。
     LevelScene.prototype.childrenCreated = function () {
         _super.prototype.childrenCreated.call(this);
-        // this.createGroup();
         this.initMap();
         this.btn_next.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onNext, this);
         this.btn_before.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onBefore, this);
@@ -1394,8 +1392,14 @@ var SceneGame = (function (_super) {
             wordList.push(showData.charAt(i));
         }
         //  wordList = this.randomList(wordList);
-        //内容区域赋值
-        for (var i = 0; i < this.group_Chaotic.numChildren - 1; i++) {
+        //内容区域赋值  大于150关   变为15字
+        if (this.levelIndex > 150) {
+            for (var i = 0; i < 5; i++) {
+                var word = new Word();
+                this.group_Chaotic.addChild(word);
+            }
+        }
+        for (var i = 0; i < this.group_Chaotic.numChildren; i++) {
             var wordRect = this.group_Chaotic.getChildAt(i);
             wordRect.SetWordText(wordList[i]);
             wordRect.visible = true;
