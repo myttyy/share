@@ -43,7 +43,15 @@ class SceneGame extends eui.Component implements  eui.UIComponent {
 		 }
 		//  wordList = this.randomList(wordList);
 
-		 //内容区域赋值
+		 //内容区域赋值  大于150关   变为15字
+		 if(this.levelIndex > 150)
+		 {
+			 for(let i = 0;i < 5;i++)
+			 {
+				 let word = new Word();
+				 this.group_Chaotic.addChild(word);
+			 }
+		 }
 		 for(let i = 0; i < this.group_Chaotic.numChildren - 1; i++)
 		 {
 			 let wordRect = <Word>this.group_Chaotic.getChildAt(i);

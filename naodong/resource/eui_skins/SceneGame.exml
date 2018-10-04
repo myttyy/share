@@ -41,11 +41,6 @@
 			<ns1:Word width="123" height="135" x="253" y="399"/>
 			<ns1:Word width="123" height="135" x="263" y="409"/>
 			<ns1:Word width="123" height="135" x="273" y="419"/>
-			<ns1:Word width="123" height="135" x="283" y="429"/>
-			<ns1:Word width="123" height="135" x="293" y="439"/>
-			<ns1:Word width="123" height="135" x="303" y="449"/>
-			<ns1:Word width="123" height="135" x="313" y="459"/>
-			<ns1:Word width="123" height="135" x="323" y="469"/>
 				<e:layout>
 					<e:TileLayout horizontalGap="3"/>
 				</e:layout>
