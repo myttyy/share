@@ -20,15 +20,12 @@ class WeChatPlatform implements Platform {
         return new Promise(async function (resolve, reject) {
             AV.Cloud.run('conf').then(function (data) {
                 //成功逻辑
-                
                 if (data.share == true) {
-                    console.log("开关开启，分享开启" + data.share);
-                    
+                    console.log("开关开启，分享开启" + data.share);  
                     LevelDataManager.isShare = true;
                 }
                 else if (data.share == false) {
                     console.log("开关关闭，分享关闭" + data.share);
-                    
                     LevelDataManager.isShare = false;
                 };
                 resolve(data.share);
