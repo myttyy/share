@@ -296,9 +296,8 @@ var WeChatPlatform = (function () {
                                             console.log(data[canShare] + "这里面的指");
                                         }
                                         console.log("转发群,分享");
-                                        console.log(canShare + "分享成功dataCAN_SHARE"); //到这里不出现了   应该是can_share
-                                        console.log(data.canShare + "aaaaaa");
                                         if (data[canShare] == true) {
+                                            console.log("可以继续分享");
                                             SceneGame.getInstance().bingoLayer.visible = false;
                                             SceneGame.getInstance().bingoLayer.erroGroup.visible = false;
                                             SoundManager.getInstance().windowSoundChanel = SoundManager.getInstance().windowSound.play(0, 1);
@@ -327,7 +326,7 @@ var WeChatPlatform = (function () {
                                             });
                                         }
                                     }, function (err) {
-                                        console.log("函数调用失败3333333");
+                                        console.log("函数调用失败23333333");
                                     });
                                 }
                             });

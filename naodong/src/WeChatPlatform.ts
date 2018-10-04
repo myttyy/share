@@ -187,6 +187,7 @@ class WeChatPlatform implements Platform {
                                 console.log("转发群,分享");
                                 if(data[canShare] == true)
                                 {
+                                console.log("可以继续分享");
                                 SceneGame.getInstance().bingoLayer.visible = false;
                                 SceneGame.getInstance().bingoLayer.erroGroup.visible = false;
 
