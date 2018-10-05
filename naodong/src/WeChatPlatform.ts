@@ -219,7 +219,22 @@ class WeChatPlatform implements Platform {
 
                             },
                                 function (err) {
-                            console.log("函数调用失败23333333");
+                                console.log("函数调用失败23333333");
+                                SceneGame.getInstance().bingoLayer.visible = false;
+                                SceneGame.getInstance().bingoLayer.erroGroup.visible = false;
+
+                                SoundManager.getInstance().windowSoundChanel = SoundManager.getInstance().windowSound.play(0, 1);
+                                SoundManager.getInstance().windowSoundChanel.volume = 1;
+                                SceneGame.getInstance().bingoLayer.visible = true;
+                                SceneGame.getInstance().bingoLayer.trueGroup.visible = true;
+                                SceneGame.getInstance().bingoLayer.daandi.visible = true;
+                                SceneGame.getInstance().hintBg(true);
+                                SceneGame.getInstance().bingoLayer.labelresult.text =
+                                LevelDataManager.getInstance().GetLevelData(LevelDataManager.getInstance().curIcon).result;
+                                SceneGame.getInstance().bingoLayer.labelExplain.text = "解释:   " +
+                                    LevelDataManager.getInstance().GetLevelData(LevelDataManager.getInstance().curIcon).explain
+                                    + "   ";
+                                console.log("result" + LevelDataManager.getInstance().GetLevelData(LevelDataManager.getInstance().curIcon).result);
                                 });
                         }
                     });
