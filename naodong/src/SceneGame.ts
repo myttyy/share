@@ -44,14 +44,8 @@ class SceneGame extends eui.Component implements  eui.UIComponent {
 		//  wordList = this.randomList(wordList);
 
 		 //内容区域赋值  大于150关   变为15字
-		 if(this.levelIndex > 150)
-		 {
-			 for(let i = 0;i < 5;i++)
-			 {
-				 let word = new Word();
-				 this.group_Chaotic.addChild(word);
-			 }
-		 }
+		 
+		 this.changeWord();//改变选择区域字数
 		 for(let i = 0; i < this.group_Chaotic.numChildren; i++)
 		 {
 			 let wordRect = <Word>this.group_Chaotic.getChildAt(i);
@@ -80,6 +74,35 @@ class SceneGame extends eui.Component implements  eui.UIComponent {
 		 
 		 //显示问题
 		 this.label_Question.text = levelData.question; 
+	 }
+	 private changeWord()
+	 {
+		  if(this.levelIndex <= 150)
+		 {
+			 if(this.group_Chaotic.numChildren == 10)
+			 {
+				 return;
+			 }
+			 this.group_Chaotic.removeChildren();
+			 for(let i = 0;i < 10;i++)
+			 {
+				 let word = new Word();
+				 this.group_Chaotic.addChild(word);
+			 }
+		 }
+		 else if(this.levelIndex >= 151)
+		 {
+			 if(this.group_Chaotic.numChildren == 15)
+			 {
+				 return;
+			 }
+			 this.group_Chaotic.removeChildren();
+			 for(let i = 0;i < 15;i++)
+			 {
+				 let word = new Word();
+				 this.group_Chaotic.addChild(word);
+			 }
+		 }
 	 }
 	 private randomList(list:any[]):any[]
 	 {
