@@ -60,11 +60,15 @@ class Main extends eui.UILayer {
         this.createGameScene();
         const result = await RES.getResAsync("description_json");
         this.startAnimation(result);
-        
+        console.log(this.stage.stageWidth);
+        console.log(this.stage.stageHeight);
         const userInfo = await (platform as any).getAVUserInfo();
         console.log("游戏初始化");
         console.log("用户信息" + userInfo);
         await (platform as any).shareCloud();
+        await (platform as any).shouAD();//广告
+        
+        
     }
     private async loadResource() {
         try {

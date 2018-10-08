@@ -8,6 +8,7 @@ class  LevelDataItem
 
 class LevelDataManager//关卡数据管理 
 {
+    public static oldADs:any;
     private static levelDataManager:LevelDataManager;
     public   curIcon:number = 1;;//当前关卡
     public   curIndex:number = 0;//当前段位

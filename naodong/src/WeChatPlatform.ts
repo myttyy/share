@@ -35,6 +35,62 @@ class WeChatPlatform implements Platform {
             });
         })
     }
+    public async shouAD():Promise<any>
+    {
+        return new Promise(function(resolve,reject){
+            let winSize = wx.getSystemInfoSync();
+            console.log(winSize);
+            let bannerHeight = 100;
+            let bannerWidth = 300;
+            let ad = (wx as any).createBannerAd({
+            adUnitId:"adunit-a57340565a6e2881",
+            style:{
+                left:35,
+                top: winSize.screenHeight - bannerHeight,
+                width: bannerWidth
+            }});
+            console.log(ad.style.top + "top");
+            console.log(ad.style.left + "left");
+            console.log(winSize.screenWidth + "winSize.screenWidth");
+            console.log(winSize.screenHeight  + "winSize.screenHeight");
+            ad.show();
+            LevelDataManager.oldADs = ad;
+        })
+    }
+    async showVideoAD():Promise<any>
+    {
+        return new Promise(function(resolve,reject){
+            let video = (wx as any).createRewardedVideoAd({ adUnitId: "adunit-be82bc3d51b4e7b9" });
+            video.show().then(()=>{
+                console.log("拉取视频成功")
+                video.onClose(res => {
+                    // 用户点击了【关闭广告】按钮
+                    if (res && res.isEnded || res === undefined) {
+                        // 正常播放结束，可以下发游戏奖励
+                        console.log("正常播放");
+                        SoundManager.getInstance().windowSoundChanel = SoundManager.getInstance().windowSound.play(0, 1);
+                        SoundManager.getInstance().windowSoundChanel.volume = 1;
+                        SceneGame.getInstance().bingoLayer.visible = true;
+                        SceneGame.getInstance().bingoLayer.trueGroup.visible = true;
+                        SceneGame.getInstance().bingoLayer.daandi.visible = true;
+                        SceneGame.getInstance().hintBg(true);
+                        SceneGame.getInstance().bingoLayer.labelresult.text =
+                        LevelDataManager.getInstance().GetLevelData(LevelDataManager.getInstance().curIcon).result;
+                        SceneGame.getInstance().bingoLayer.labelExplain.text = "解释:   " +
+                        LevelDataManager.getInstance().GetLevelData(LevelDataManager.getInstance().curIcon).explain + "   ";
+                        console.log("result" + LevelDataManager.getInstance().GetLevelData(LevelDataManager.getInstance().curIcon).result);
+                    }
+                    else {
+                        // 播放中途退出，不下发游戏奖励
+                        console.log("提前关闭");
+                    }
+})
+            }).catch(err=>{
+                console.log("视频拉取失败");
+                 video.load().then(() => video.show())
+            })
+        })
+    }
  
     async getAVUserInfo():Promise<any>{
         var self = this;
@@ -138,9 +194,7 @@ class WeChatPlatform implements Platform {
           SceneGame.getInstance().bingoLayer.labelExplain.text = "解释:   " +
             LevelDataManager.getInstance().GetLevelData(LevelDataManager.getInstance().curIcon).explain
             + "   ";
-          console.log("result" + LevelDataManager.getInstance().GetLevelData
-
-            (LevelDataManager.getInstance().curIcon).result);
+          console.log("result" + LevelDataManager.getInstance().GetLevelData(LevelDataManager.getInstance().curIcon).result);
             
         }
       })

@@ -222,7 +222,8 @@ class SceneGame extends eui.Component implements  eui.UIComponent {
 		if(LevelDataManager.isShare == true)
 		{
 			console.log("开关开启，分享开启Scene");
-			platform.updateShareMenu();
+			// platform.updateShareMenu();
+			platform.showVideoAD();
 		}
 		else if(LevelDataManager.isShare == false)
 		{

@@ -1,5 +1,5 @@
 /******/ (function (modules) { // webpackBootstrap
-/******/ 	// The module cache
+/******/ 	// The module 
 /******/ 	var installedModules = {};
 
 /******/ 	// The require function
@@ -1261,6 +1261,7 @@
                     key: 'getResponseHeader',
                     value: function getResponseHeader(header) {
                       return _responseHeader.get(this)[header] ? _responseHeader.get(this)[header] : "application/json;charset=utf-8";
+
                     }
                 }, {
                     key: 'open',

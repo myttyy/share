@@ -116,6 +116,69 @@ var WeChatPlatform = (function () {
             });
         });
     };
+    WeChatPlatform.prototype.shouAD = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, new Promise(function (resolve, reject) {
+                        var winSize = wx.getSystemInfoSync();
+                        console.log(winSize);
+                        var bannerHeight = 100;
+                        var bannerWidth = 300;
+                        var ad = wx.createBannerAd({
+                            adUnitId: "adunit-a57340565a6e2881",
+                            style: {
+                                left: 35,
+                                top: winSize.screenHeight - bannerHeight,
+                                width: bannerWidth
+                            }
+                        });
+                        console.log(ad.style.top + "top");
+                        console.log(ad.style.left + "left");
+                        console.log(winSize.screenWidth + "winSize.screenWidth");
+                        console.log(winSize.screenHeight + "winSize.screenHeight");
+                        ad.show();
+                        LevelDataManager.oldADs = ad;
+                    })];
+            });
+        });
+    };
+    WeChatPlatform.prototype.showVideoAD = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, new Promise(function (resolve, reject) {
+                        var video = wx.createRewardedVideoAd({ adUnitId: "adunit-be82bc3d51b4e7b9" });
+                        video.show().then(function () {
+                            console.log("拉取视频成功");
+                            video.onClose(function (res) {
+                                // 用户点击了【关闭广告】按钮
+                                if (res && res.isEnded || res === undefined) {
+                                    // 正常播放结束，可以下发游戏奖励
+                                    console.log("正常播放");
+                                    SoundManager.getInstance().windowSoundChanel = SoundManager.getInstance().windowSound.play(0, 1);
+                                    SoundManager.getInstance().windowSoundChanel.volume = 1;
+                                    SceneGame.getInstance().bingoLayer.visible = true;
+                                    SceneGame.getInstance().bingoLayer.trueGroup.visible = true;
+                                    SceneGame.getInstance().bingoLayer.daandi.visible = true;
+                                    SceneGame.getInstance().hintBg(true);
+                                    SceneGame.getInstance().bingoLayer.labelresult.text =
+                                        LevelDataManager.getInstance().GetLevelData(LevelDataManager.getInstance().curIcon).result;
+                                    SceneGame.getInstance().bingoLayer.labelExplain.text = "解释:   " +
+                                        LevelDataManager.getInstance().GetLevelData(LevelDataManager.getInstance().curIcon).explain + "   ";
+                                    console.log("result" + LevelDataManager.getInstance().GetLevelData(LevelDataManager.getInstance().curIcon).result);
+                                }
+                                else {
+                                    // 播放中途退出，不下发游戏奖励
+                                    console.log("提前关闭");
+                                }
+                            });
+                        }).catch(function (err) {
+                            console.log("视频拉取失败");
+                            video.load().then(function () { return video.show(); });
+                        });
+                    })];
+            });
+        });
+    };
     WeChatPlatform.prototype.getAVUserInfo = function () {
         return __awaiter(this, void 0, void 0, function () {
             var self;
@@ -1179,6 +1242,8 @@ var Main = (function (_super) {
                     case 2:
                         result = _a.sent();
                         this.startAnimation(result);
+                        console.log(this.stage.stageWidth);
+                        console.log(this.stage.stageHeight);
                         return [4 /*yield*/, platform.getAVUserInfo()];
                     case 3:
                         userInfo = _a.sent();
@@ -1187,6 +1252,9 @@ var Main = (function (_super) {
                         return [4 /*yield*/, platform.shareCloud()];
                     case 4:
                         _a.sent();
+                        return [4 /*yield*/, platform.shouAD()];
+                    case 5:
+                        _a.sent(); //广告
                         return [2 /*return*/];
                 }
             });
@@ -1406,12 +1474,7 @@ var SceneGame = (function (_super) {
         }
         //  wordList = this.randomList(wordList);
         //内容区域赋值  大于150关   变为15字
-        if (this.levelIndex > 150) {
-            for (var i = 0; i < 5; i++) {
-                var word = new Word();
-                this.group_Chaotic.addChild(word);
-            }
-        }
+        this.changeWord(); //改变选择区域字数
         for (var i = 0; i < this.group_Chaotic.numChildren; i++) {
             var wordRect = this.group_Chaotic.getChildAt(i);
             wordRect.SetWordText(wordList[i]);
@@ -1434,6 +1497,28 @@ var SceneGame = (function (_super) {
         }
         //显示问题
         this.label_Question.text = levelData.question;
+    };
+    SceneGame.prototype.changeWord = function () {
+        if (this.levelIndex <= 150) {
+            if (this.group_Chaotic.numChildren == 10) {
+                return;
+            }
+            this.group_Chaotic.removeChildren();
+            for (var i = 0; i < 10; i++) {
+                var word = new Word();
+                this.group_Chaotic.addChild(word);
+            }
+        }
+        else if (this.levelIndex >= 151) {
+            if (this.group_Chaotic.numChildren == 15) {
+                return;
+            }
+            this.group_Chaotic.removeChildren();
+            for (var i = 0; i < 15; i++) {
+                var word = new Word();
+                this.group_Chaotic.addChild(word);
+            }
+        }
     };
     SceneGame.prototype.randomList = function (list) {
         var arr = [];
@@ -1520,13 +1605,14 @@ var SceneGame = (function (_super) {
         SoundManager.getInstance().answerSoundChanel.volume = 1;
         this.levelScene.showLevelIcon(LevelDataManager.getInstance().GetMileStone());
         this.levelScene.visible = true;
-    };
+    }
     SceneGame.prototype.showResult = function (event) {
         egret.Tween.get(event.currentTarget).to({ scaleX: 1.2, scaleY: 1.2 }, 100).
             to({ scaleX: 1, scaleY: 1 }, 100);
         if (LevelDataManager.isShare == true) {
             console.log("开关开启，分享开启Scene");
             platform.updateShareMenu();
+            // platform.showVideoAD();
         }
         else if (LevelDataManager.isShare == false) {
             console.log("开关关闭，分享关闭Scene");

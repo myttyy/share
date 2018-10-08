@@ -184,10 +184,10 @@ var egret = window.egret;window.skins={};
 		this.groupAll = t;
 		t.anchorOffsetX = 360;
 		t.anchorOffsetY = 640;
-		t.height = 1280;
-		t.width = 720;
-		t.x = 360;
-		t.y = 640;
+		t.bottom = 0;
+		t.left = 0;
+		t.right = 0;
+		t.top = 0;
 		t.elementsContent = [this.bg_i(),this.bingoGroup_i(),this.trueGroup_i(),this.imgErro_i(),this.erroGroup_i(),this.upgradeGroup_i()];
 		return t;
 	};
@@ -1433,28 +1433,28 @@ var egret = window.egret;window.skins={};
 		
 		this.height = 1280;
 		this.width = 720;
-		this.elementsContent = [this._Group3_i()];
+		this.elementsContent = [this._Group2_i(),this._Group3_i()];
 	}
 	var _proto = SceneGameSkin.prototype;
 
-	_proto._Group3_i = function () {
-		var t = new eui.Group();
-		t.height = 1280;
-		t.width = 720;
-		t.x = 0;
-		t.y = 0;
-		t.elementsContent = [this._Group2_i()];
-		return t;
-	};
 	_proto._Group2_i = function () {
 		var t = new eui.Group();
+		t.bottom = 0;
+		t.left = 0;
+		t.right = 0;
+		t.top = 0;
+		t.elementsContent = [this._Group1_i()];
+		return t;
+	};
+	_proto._Group1_i = function () {
+		var t = new eui.Group();
 		t.height = 1280;
+		t.horizontalCenter = 0;
 		t.scaleX = 1;
 		t.scaleY = 1;
+		t.verticalCenter = 0;
 		t.width = 720;
-		t.x = 0;
-		t.y = 0;
-		t.elementsContent = [this.gameBg_i(),this.group_Help_i(),this.label_Question_i(),this.group_Result_i(),this.group_Chaotic_i(),this.labelLevel_i(),this.bingoLayer_i(),this.levelScene_i(),this._Group1_i()];
+		t.elementsContent = [this.gameBg_i(),this.group_Help_i(),this.label_Question_i(),this.group_Result_i(),this.group_Chaotic_i(),this.labelLevel_i(),this.bingoLayer_i(),this.levelScene_i()];
 		return t;
 	};
 	_proto.gameBg_i = function () {
@@ -1697,13 +1697,13 @@ var egret = window.egret;window.skins={};
 		t.y = 0;
 		return t;
 	};
-	_proto._Group1_i = function () {
+	_proto._Group3_i = function () {
 		var t = new eui.Group();
-		t.height = 183;
-		t.horizontalCenter = 0;
-		t.visible = false;
-		t.width = 522;
-		t.y = 1094;
+		t.anchorOffsetX = 0;
+		t.height = 190;
+		t.width = 595;
+		t.x = 65;
+		t.y = 1090;
 		return t;
 	};
 	return SceneGameSkin;
