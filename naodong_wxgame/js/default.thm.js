@@ -1427,13 +1427,53 @@ var egret = window.egret;window.skins={};
 		return SceneGameSkin$Skin8;
 	})(eui.Skin);
 
+	var SceneGameSkin$Skin9 = 	(function (_super) {
+		__extends(SceneGameSkin$Skin9, _super);
+		function SceneGameSkin$Skin9() {
+			_super.call(this);
+			this.skinParts = ["labelDisplay"];
+			
+			this.elementsContent = [this._Image1_i(),this.labelDisplay_i()];
+			this.states = [
+				new eui.State ("up",
+					[
+					])
+				,
+				new eui.State ("down",
+					[
+					])
+				,
+				new eui.State ("disabled",
+					[
+					])
+			];
+		}
+		var _proto = SceneGameSkin$Skin9.prototype;
+
+		_proto._Image1_i = function () {
+			var t = new eui.Image();
+			t.percentHeight = 100;
+			t.source = "paihangbang_png";
+			t.percentWidth = 100;
+			return t;
+		};
+		_proto.labelDisplay_i = function () {
+			var t = new eui.Label();
+			this.labelDisplay = t;
+			t.horizontalCenter = 0;
+			t.verticalCenter = 0;
+			return t;
+		};
+		return SceneGameSkin$Skin9;
+	})(eui.Skin);
+
 	function SceneGameSkin() {
 		_super.call(this);
-		this.skinParts = ["gameBg","btn_Level","btn_result","group_Help","label_Question","group_Result","group_Chaotic","labelLevel","bingoLayer","levelScene"];
+		this.skinParts = ["gameBg","btn_Level","btn_result","btn_paihang","group_Help","label_Question","group_Result","group_Chaotic","labelLevel","bingoLayer","levelScene"];
 		
 		this.height = 1280;
 		this.width = 720;
-		this.elementsContent = [this._Group2_i(),this._Group3_i()];
+		this.elementsContent = [this._Group2_i()];
 	}
 	var _proto = SceneGameSkin.prototype;
 
@@ -1476,7 +1516,7 @@ var egret = window.egret;window.skins={};
 		t.horizontalCenter = 0;
 		t.width = 720;
 		t.y = 0;
-		t.elementsContent = [this.btn_Level_i(),this.btn_result_i()];
+		t.elementsContent = [this.btn_Level_i(),this.btn_result_i(),this.btn_paihang_i()];
 		return t;
 	};
 	_proto.btn_Level_i = function () {
@@ -1488,8 +1528,8 @@ var egret = window.egret;window.skins={};
 		t.height = 111;
 		t.label = "";
 		t.width = 109;
-		t.x = 11;
-		t.y = 151;
+		t.x = 10;
+		t.y = 150;
 		t.skinName = SceneGameSkin$Skin7;
 		return t;
 	};
@@ -1505,6 +1545,18 @@ var egret = window.egret;window.skins={};
 		t.x = 360;
 		t.y = 506;
 		t.skinName = SceneGameSkin$Skin8;
+		return t;
+	};
+	_proto.btn_paihang_i = function () {
+		var t = new eui.Button();
+		this.btn_paihang = t;
+		t.enabled = true;
+		t.label = "";
+		t.scaleX = 1;
+		t.scaleY = 1;
+		t.x = 600;
+		t.y = 150;
+		t.skinName = SceneGameSkin$Skin9;
 		return t;
 	};
 	_proto.label_Question_i = function () {
@@ -1695,15 +1747,6 @@ var egret = window.egret;window.skins={};
 		t.width = 720;
 		t.x = 0;
 		t.y = 0;
-		return t;
-	};
-	_proto._Group3_i = function () {
-		var t = new eui.Group();
-		t.anchorOffsetX = 0;
-		t.height = 190;
-		t.width = 595;
-		t.x = 65;
-		t.y = 1090;
 		return t;
 	};
 	return SceneGameSkin;

@@ -72,7 +72,23 @@ class Bingo extends eui.Component implements  eui.UIComponent {
 		LevelDataManager.getInstance().curIcon++;
 		if(LevelDataManager.getInstance().curIcon > LevelDataManager.getInstance().GetMileStone())//如果大于最远
 		{
-			LevelDataManager.getInstance().SetMileStone(LevelDataManager.getInstance().curIcon);//存储
+			let level = LevelDataManager.getInstance().curIcon;
+			LevelDataManager.getInstance().SetMileStone(level);//存储
+			(wx as any).setUserCloudStorage({
+				KVDataList:[{key:"score",value:level.toString()}],
+				success: res => {
+					console.log(res);
+					// 让子域更新当前用户的最高分，因为主域无法得到getUserCloadStorage;
+					let openDataContext = (wx as any).getOpenDataContext();
+					openDataContext.postMessage({
+						command:"open",
+						type: "updateMaxScore"
+					});
+				},
+				fail: res => {
+					console.log(res);
+				}
+			})
 		}
 		SceneGame.getInstance().InitLevel(LevelDataManager.getInstance().curIcon);
 		this.imageUpdate();
@@ -86,7 +102,7 @@ class Bingo extends eui.Component implements  eui.UIComponent {
 		this.visible = false;
 		this.bingoGroup.visible = false;
 		this.trueGroup.visible = false;
-		LevelDataManager.getInstance().curIcon++;//////这里写在微信中。
+		LevelDataManager.getInstance().curIcon++;
 		console.log(LevelDataManager.getInstance().curIcon);
 		if(LevelDataManager.getInstance().curIcon > LevelDataManager.getInstance().GetMileStone())//如果大于最远
 		{

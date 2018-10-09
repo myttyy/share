@@ -40,6 +40,7 @@ class LevelDataManager//关卡数据管理
         this.levelDataItemList = RES.getRes("test_json");
     }
 
+
     //通过关卡号获取数据
     public GetLevelData(level):LevelDataItem
     {
@@ -86,6 +87,69 @@ class LevelDataManager//关卡数据管理
     public SetMileStone(index:number)
     {
         egret.localStorage.setItem("MAX_MILESTONE",index.toString());
+    }
+
+    //拉取banner广告
+    public getAd()
+    {
+        if(LevelDataManager.oldADs)
+        {
+            LevelDataManager.oldADs.hide();
+            LevelDataManager.oldADs.destroy();
+            console.log("销毁");
+        }
+            let winSize = wx.getSystemInfoSync();
+            console.log(winSize);
+            let bannerHeight = 100;
+            let bannerWidth = 300;
+            let newad:any;
+             if(winSize.model == "iPhone X")
+            {
+            newad = (wx as any).createBannerAd({
+            adUnitId:"adunit-a57340565a6e2881",
+            style:{
+                left:0,
+                top: winSize.screenHeight - bannerHeight - 40,
+                width: bannerWidth + 300,
+                
+            }});
+            }
+            else if(winSize.model == "iPhone 7 Plus" || winSize.model == "iPhone 6 Plus")
+            {
+                newad = (wx as any).createBannerAd({
+                adUnitId:"adunit-a57340565a6e2881",
+                style:{
+                    left:0,
+                    top: winSize.screenHeight - bannerHeight - 15,
+                    width: bannerWidth + 300
+                }});
+            }
+               else if(winSize.model == "iPhone 6s Plus")
+            {
+             newad = (wx as any).createBannerAd({
+            adUnitId:"adunit-a57340565a6e2881",
+            style:{
+                left:40,
+                top: winSize.screenHeight - bannerHeight - 20,
+                width: bannerWidth + 400
+            }});
+            }
+            else 
+            {
+            newad = (wx as any).createBannerAd({
+            adUnitId:"adunit-a57340565a6e2881",
+            style:{
+                left:35,
+                top: winSize.screenHeight - bannerHeight,
+                width: bannerWidth
+            }});
+            }
+            console.log(newad.style.top + "top");
+            console.log(newad.style.left + "left");
+            console.log(winSize.screenWidth + "winSize.screenWidth");
+            console.log(winSize.screenHeight  + "winSize.screenHeight");
+            newad.show();
+            LevelDataManager.oldADs = newad;
     }
 }
 

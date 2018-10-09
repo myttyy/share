@@ -38,17 +38,31 @@ class WeChatPlatform implements Platform {
     public async shouAD():Promise<any>
     {
         return new Promise(function(resolve,reject){
-            let winSize = wx.getSystemInfoSync();
+            let winSize = (wx as any).getSystemInfoSync();
             console.log(winSize);
             let bannerHeight = 100;
             let bannerWidth = 300;
-            let ad = (wx as any).createBannerAd({
+            let ad:any;
+            if(winSize.model == "iPhone X")
+            {
+             ad = (wx as any).createBannerAd({
+            adUnitId:"adunit-a57340565a6e2881",
+            style:{
+                left:50,
+                top: winSize.screenHeight - bannerHeight,
+                width: bannerWidth + 200
+            }});
+            }
+            else 
+            {
+             ad = (wx as any).createBannerAd({
             adUnitId:"adunit-a57340565a6e2881",
             style:{
                 left:35,
                 top: winSize.screenHeight - bannerHeight,
                 width: bannerWidth
             }});
+            }
             console.log(ad.style.top + "top");
             console.log(ad.style.left + "left");
             console.log(winSize.screenWidth + "winSize.screenWidth");
@@ -57,6 +71,7 @@ class WeChatPlatform implements Platform {
             LevelDataManager.oldADs = ad;
         })
     }
+    
     async showVideoAD():Promise<any>
     {
         return new Promise(function(resolve,reject){
@@ -84,7 +99,7 @@ class WeChatPlatform implements Platform {
                         // 播放中途退出，不下发游戏奖励
                         console.log("提前关闭");
                     }
-})
+                })
             }).catch(err=>{
                 console.log("视频拉取失败");
                  video.load().then(() => video.show())

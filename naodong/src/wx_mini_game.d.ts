@@ -623,7 +623,7 @@ declare interface UpdateManager {
     /**
      * 监听检查更新结果回调
      */
-    onCheckForUpdate(callback: ()=>void): void;
+    onCheckForUpdate(callback: (res)=>void): void;
     /**
      * 监听更新包下载成功回调
      */

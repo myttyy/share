@@ -1,7 +1,7 @@
 class SceneGame extends eui.Component implements  eui.UIComponent {
 	public constructor() {
 		super();
-	// this.skinName =  "resource/eui_skins/SceneGame.exml"
+	
 	}
 	private static scenegame:SceneGame;
 	// private s:string;
@@ -14,6 +14,7 @@ class SceneGame extends eui.Component implements  eui.UIComponent {
 	
 		return  SceneGame.scenegame;
 	}
+	public btn_paihang:eui.Button;
 
 	public bingoLayer:Bingo;//层
 	public levelScene:LevelScene;//关卡层。
@@ -46,6 +47,7 @@ class SceneGame extends eui.Component implements  eui.UIComponent {
 		 //内容区域赋值  大于150关   变为15字
 		 
 		 this.changeWord();//改变选择区域字数
+		//  this.group_Chaotic.layout = new eui.TileLayout();
 		 for(let i = 0; i < this.group_Chaotic.numChildren; i++)
 		 {
 			 let wordRect = <Word>this.group_Chaotic.getChildAt(i);
@@ -199,12 +201,39 @@ class SceneGame extends eui.Component implements  eui.UIComponent {
 		super.partAdded(partName,instance);
 	}
 
-
+	private bitmap:egret.Bitmap;
 	protected childrenCreated():void
 	{
 		super.childrenCreated();
 		this.btn_result.addEventListener(egret.TouchEvent.TOUCH_TAP,this.showResult,this);
 		this.btn_Level.addEventListener(egret.TouchEvent.TOUCH_TAP,this.onLevel,this);
+		this.btn_paihang.addEventListener(egret.TouchEvent.TOUCH_TAP,this.onpaihang,this);
+	}
+	private onpaihang()
+	{
+			console.log("点击排行");
+			  let platform: any = window.platform;
+			        //主要示例代码开始
+            this.bitmap = platform.openDataContext.createDisplayObject(null, this.stage.stageWidth, this.stage.stageHeight);
+            this.addChild(this.bitmap);
+            //主域向子域发送自定义消息
+            platform.openDataContext.postMessage({
+                text: 'hello',
+                year: (new Date()).getFullYear(),
+                command: "open",
+                type:"opendata"
+            });
+            //主要示例代码结束            
+            // this.isdisplay = true;
+			// let openDataContext = (wx as any).getOpenDataContext();
+			// this.bitmap = openDataContext.createDisplayObject(null, this.stage.stageWidth, this.stage.stageHeight);
+            // this.addChild(this.bitmap);
+			// openDataContext.postMessage({
+			// 	command: "open",
+			// 	type:"friend"
+			// });
+			console.log("点击了排行榜");
+
 	}
 	private onLevel()
 	{
@@ -222,8 +251,8 @@ class SceneGame extends eui.Component implements  eui.UIComponent {
 		if(LevelDataManager.isShare == true)
 		{
 			console.log("开关开启，分享开启Scene");
-			// platform.updateShareMenu();
-			platform.showVideoAD();
+			platform.updateShareMenu();
+			// platform.showVideoAD();
 		}
 		else if(LevelDataManager.isShare == false)
 		{

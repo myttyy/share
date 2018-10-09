@@ -2,25 +2,18 @@
 class PlayerData
 {
    
-    private static playerData:PlayerData;
-    public static getInstance()
+    public getMD()
     {
-        if(PlayerData.playerData == null)
+        let milestone = egret.localStorage.getItem("MD");
+        if(milestone == "" || milestone == null)
         {
-            PlayerData.playerData = new PlayerData();
+            milestone = "1";
         }
-        return PlayerData.playerData;
+        return parseInt(milestone);
     }
-    public setMaxIndex(max:number)
+
+    public setMD(MD:number)
     {
-        // 	//保存进度
-		// egret.localStorage.setItem("MaxLength",max.toString());
-		// PlayerData.getInstance().maxIndex = max;
-        // PlayerData.getInstance().curIcon = max;
-    }
-    public getMaxIndex()
-    {
-        let max = egret.localStorage.getItem("MaxLength");
-        return max;
+        egret.localStorage.setItem("MD",MD.toString());
     }
 }

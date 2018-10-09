@@ -49,4 +49,5 @@ class LoadingUI extends egret.Sprite implements RES.PromiseTaskReporter {
         this.textField.text = `Loading...${current}/${total}`;
         //加载条x缩放
     }
+
 }

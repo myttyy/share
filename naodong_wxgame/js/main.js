@@ -124,14 +124,27 @@ var WeChatPlatform = (function () {
                         console.log(winSize);
                         var bannerHeight = 100;
                         var bannerWidth = 300;
-                        var ad = wx.createBannerAd({
-                            adUnitId: "adunit-a57340565a6e2881",
-                            style: {
-                                left: 35,
-                                top: winSize.screenHeight - bannerHeight,
-                                width: bannerWidth
-                            }
-                        });
+                        var ad;
+                        if (winSize.model == "iPhone X") {
+                            ad = wx.createBannerAd({
+                                adUnitId: "adunit-a57340565a6e2881",
+                                style: {
+                                    left: 50,
+                                    top: winSize.screenHeight - bannerHeight,
+                                    width: bannerWidth + 200
+                                }
+                            });
+                        }
+                        else {
+                            ad = wx.createBannerAd({
+                                adUnitId: "adunit-a57340565a6e2881",
+                                style: {
+                                    left: 35,
+                                    top: winSize.screenHeight - bannerHeight,
+                                    width: bannerWidth
+                                }
+                            });
+                        }
                         console.log(ad.style.top + "top");
                         console.log(ad.style.left + "left");
                         console.log(winSize.screenWidth + "winSize.screenWidth");
@@ -476,7 +489,23 @@ var Bingo = (function (_super) {
         this.trueGroup.visible = false;
         LevelDataManager.getInstance().curIcon++;
         if (LevelDataManager.getInstance().curIcon > LevelDataManager.getInstance().GetMileStone()) {
-            LevelDataManager.getInstance().SetMileStone(LevelDataManager.getInstance().curIcon); //存储
+            var level = LevelDataManager.getInstance().curIcon;
+            LevelDataManager.getInstance().SetMileStone(level); //存储
+            wx.setUserCloudStorage({
+                KVDataList: [{ key: "score", value: level.toString() }],
+                success: function (res) {
+                    console.log(res);
+                    // 让子域更新当前用户的最高分，因为主域无法得到getUserCloadStorage;
+                    var openDataContext = wx.getOpenDataContext();
+                    openDataContext.postMessage({
+                        command: "open",
+                        type: "updateMaxScore"
+                    });
+                },
+                fail: function (res) {
+                    console.log(res);
+                }
+            });
         }
         SceneGame.getInstance().InitLevel(LevelDataManager.getInstance().curIcon);
         this.imageUpdate();
@@ -488,7 +517,7 @@ var Bingo = (function (_super) {
         this.visible = false;
         this.bingoGroup.visible = false;
         this.trueGroup.visible = false;
-        LevelDataManager.getInstance().curIcon++; //////这里写在微信中。
+        LevelDataManager.getInstance().curIcon++;
         console.log(LevelDataManager.getInstance().curIcon);
         if (LevelDataManager.getInstance().curIcon > LevelDataManager.getInstance().GetMileStone()) {
             LevelDataManager.getInstance().SetMileStone(LevelDataManager.getInstance().curIcon); //存储
@@ -802,6 +831,65 @@ var LevelDataManager = (function () {
     //设置当前游戏最远进度
     LevelDataManager.prototype.SetMileStone = function (index) {
         egret.localStorage.setItem("MAX_MILESTONE", index.toString());
+    };
+    //拉取banner广告
+    LevelDataManager.prototype.getAd = function () {
+        if (LevelDataManager.oldADs) {
+            LevelDataManager.oldADs.hide();
+            LevelDataManager.oldADs.destroy();
+            console.log("销毁");
+        }
+        var winSize = wx.getSystemInfoSync();
+        console.log(winSize);
+        var bannerHeight = 100;
+        var bannerWidth = 300;
+        var newad;
+        if (winSize.model == "iPhone X") {
+            newad = wx.createBannerAd({
+                adUnitId: "adunit-a57340565a6e2881",
+                style: {
+                    left: 0,
+                    top: winSize.screenHeight - bannerHeight - 40,
+                    width: bannerWidth + 300,
+                }
+            });
+        }
+        else if (winSize.model == "iPhone 7 Plus" || winSize.model == "iPhone 6 Plus") {
+            newad = wx.createBannerAd({
+                adUnitId: "adunit-a57340565a6e2881",
+                style: {
+                    left: 0,
+                    top: winSize.screenHeight - bannerHeight - 15,
+                    width: bannerWidth + 300
+                }
+            });
+        }
+        else if (winSize.model == "iPhone 6s Plus") {
+            newad = wx.createBannerAd({
+                adUnitId: "adunit-a57340565a6e2881",
+                style: {
+                    left: 40,
+                    top: winSize.screenHeight - bannerHeight - 20,
+                    width: bannerWidth + 400
+                }
+            });
+        }
+        else {
+            newad = wx.createBannerAd({
+                adUnitId: "adunit-a57340565a6e2881",
+                style: {
+                    left: 35,
+                    top: winSize.screenHeight - bannerHeight,
+                    width: bannerWidth
+                }
+            });
+        }
+        console.log(newad.style.top + "top");
+        console.log(newad.style.left + "left");
+        console.log(winSize.screenWidth + "winSize.screenWidth");
+        console.log(winSize.screenHeight + "winSize.screenHeight");
+        newad.show();
+        LevelDataManager.oldADs = newad;
     };
     LevelDataManager.tempIndex = 0; //当前页面
     LevelDataManager.isShare = false;
@@ -1203,8 +1291,12 @@ __reflect(LoadingUI.prototype, "LoadingUI", ["RES.PromiseTaskReporter"]);
 var Main = (function (_super) {
     __extends(Main, _super);
     function Main() {
-        return _super !== null && _super.apply(this, arguments) || this;
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.isdisplay = false;
+        return _this;
     }
+    // private player:PlayerData;
+    // private isMD:boolean = false;
     Main.prototype.createChildren = function () {
         _super.prototype.createChildren.call(this);
         egret.lifecycle.addLifecycleListener(function (context) {
@@ -1227,13 +1319,22 @@ var Main = (function (_super) {
     };
     Main.prototype.runGame = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var result, userInfo;
+            var updateManager, result, userInfo;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         wx.updateShareMenu({
                             withShareTicket: true
                         });
+                        try {
+                            if (wx.getUpdateManager()) {
+                                updateManager = wx.getUpdateManager();
+                                updateManager.onCheckForUpdate(function (res) { console.warn("onCheckForUpdate", res.hasUpdate); });
+                                updateManager.onUpdateReady(function () { updateManager.applyUpdate(); });
+                                updateManager.onUpdateFailed(function () { });
+                            }
+                        }
+                        catch (ex) { }
                         return [4 /*yield*/, this.loadResource()];
                     case 1:
                         _a.sent();
@@ -1251,10 +1352,7 @@ var Main = (function (_super) {
                         console.log("用户信息" + userInfo);
                         return [4 /*yield*/, platform.shareCloud()];
                     case 4:
-                        _a.sent();
-                        return [4 /*yield*/, platform.shouAD()];
-                    case 5:
-                        _a.sent(); //广告
+                        _a.sent(); //分享开启
                         return [2 /*return*/];
                 }
             });
@@ -1300,10 +1398,6 @@ var Main = (function (_super) {
             }, _this);
         });
     };
-    /**
-     * 创建场景界面
-     * Create scene interface
-     */
     Main.prototype.createGameScene = function () {
         console.log("游戏初始化了");
         SoundManager.getInstance();
@@ -1314,6 +1408,15 @@ var Main = (function (_super) {
         LevelDataManager.getInstance().curIcon = data;
         SceneGame.getInstance().InitLevel(data);
         console.log(data);
+        LevelDataManager.getInstance().getAd(); //手动拉AD
+        this.btnOpen = new eui.Button();
+        this.btnOpen.label = "btnClose!";
+        this.btnOpen.x = 50;
+        this.btnOpen.y = 35;
+        this.btnOpen.horizontalCenter = 0;
+        this.addChild(this.btnOpen);
+        this.btnOpen.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onButtonClick, this);
+        console.log("aaaaaa");
     };
     /**
      * 根据name关键字创建一个Bitmap对象。name属性请参考resources/resource.json配置文件的内容。
@@ -1352,16 +1455,46 @@ var Main = (function (_super) {
         };
         // change();
     };
-    /**
-     * 点击按钮
-     * Click the button
-     */
     Main.prototype.onButtonClick = function (e) {
-        var panel = new eui.Panel();
-        panel.title = "Title";
-        panel.horizontalCenter = 0;
-        panel.verticalCenter = 0;
-        this.addChild(panel);
+        console.log('点击btnClose按钮');
+        var platform = window.platform;
+        if (this.isdisplay) {
+            this.bitmap.parent && this.bitmap.parent.removeChild(this.bitmap);
+            this.rankingListMask.parent && this.rankingListMask.parent.removeChild(this.rankingListMask);
+            this.isdisplay = false;
+            platform.openDataContext.postMessage({
+                isDisplay: this.isdisplay,
+                text: 'hello',
+                year: (new Date()).getFullYear(),
+                command: "close",
+                type: "closedata"
+            });
+        }
+        else {
+            //处理遮罩，避免开放数据域事件影响主域。
+            this.rankingListMask = new egret.Shape();
+            this.rankingListMask.graphics.beginFill(0x000000, 1);
+            this.rankingListMask.graphics.drawRect(0, 0, this.stage.width, this.stage.height);
+            this.rankingListMask.graphics.endFill();
+            this.rankingListMask.alpha = 0.5;
+            this.rankingListMask.touchEnabled = true;
+            this.addChild(this.rankingListMask);
+            //简单实现，打开这关闭使用一个按钮。
+            this.addChild(this.btnOpen);
+            //主要示例代码开始
+            this.bitmap = platform.openDataContext.createDisplayObject(null, this.stage.stageWidth, this.stage.stageHeight);
+            this.addChild(this.bitmap);
+            //主域向子域发送自定义消息
+            platform.openDataContext.postMessage({
+                isDisplay: this.isdisplay,
+                text: 'hello',
+                year: (new Date()).getFullYear(),
+                command: "open",
+                type: "opendata"
+            });
+            //主要示例代码结束            
+            this.isdisplay = true;
+        }
     };
     return Main;
 }(eui.UILayer));
@@ -1428,21 +1561,15 @@ __reflect(AssetAdapter.prototype, "AssetAdapter", ["eui.IAssetAdapter"]);
 var PlayerData = (function () {
     function PlayerData() {
     }
-    PlayerData.getInstance = function () {
-        if (PlayerData.playerData == null) {
-            PlayerData.playerData = new PlayerData();
+    PlayerData.prototype.getMD = function () {
+        var milestone = egret.localStorage.getItem("MD");
+        if (milestone == "" || milestone == null) {
+            milestone = "1";
         }
-        return PlayerData.playerData;
+        return parseInt(milestone);
     };
-    PlayerData.prototype.setMaxIndex = function (max) {
-        // 	//保存进度
-        // egret.localStorage.setItem("MaxLength",max.toString());
-        // PlayerData.getInstance().maxIndex = max;
-        // PlayerData.getInstance().curIcon = max;
-    };
-    PlayerData.prototype.getMaxIndex = function () {
-        var max = egret.localStorage.getItem("MaxLength");
-        return max;
+    PlayerData.prototype.setMD = function (MD) {
+        egret.localStorage.setItem("MD", MD.toString());
     };
     return PlayerData;
 }());
@@ -1451,7 +1578,6 @@ var SceneGame = (function (_super) {
     __extends(SceneGame, _super);
     function SceneGame() {
         return _super.call(this) || this;
-        // this.skinName =  "resource/eui_skins/SceneGame.exml"
     }
     // private s:string;
     SceneGame.getInstance = function () {
@@ -1475,6 +1601,7 @@ var SceneGame = (function (_super) {
         //  wordList = this.randomList(wordList);
         //内容区域赋值  大于150关   变为15字
         this.changeWord(); //改变选择区域字数
+        //  this.group_Chaotic.layout = new eui.TileLayout();
         for (var i = 0; i < this.group_Chaotic.numChildren; i++) {
             var wordRect = this.group_Chaotic.getChildAt(i);
             wordRect.SetWordText(wordList[i]);
@@ -1599,13 +1726,38 @@ var SceneGame = (function (_super) {
         _super.prototype.childrenCreated.call(this);
         this.btn_result.addEventListener(egret.TouchEvent.TOUCH_TAP, this.showResult, this);
         this.btn_Level.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onLevel, this);
+        this.btn_paihang.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onpaihang, this);
+    };
+    SceneGame.prototype.onpaihang = function () {
+        console.log("点击排行");
+        var platform = window.platform;
+        //主要示例代码开始
+        this.bitmap = platform.openDataContext.createDisplayObject(null, this.stage.stageWidth, this.stage.stageHeight);
+        this.addChild(this.bitmap);
+        //主域向子域发送自定义消息
+        platform.openDataContext.postMessage({
+            text: 'hello',
+            year: (new Date()).getFullYear(),
+            command: "open",
+            type: "opendata"
+        });
+        //主要示例代码结束            
+        // this.isdisplay = true;
+        // let openDataContext = (wx as any).getOpenDataContext();
+        // this.bitmap = openDataContext.createDisplayObject(null, this.stage.stageWidth, this.stage.stageHeight);
+        // this.addChild(this.bitmap);
+        // openDataContext.postMessage({
+        // 	command: "open",
+        // 	type:"friend"
+        // });
+        console.log("点击了排行榜");
     };
     SceneGame.prototype.onLevel = function () {
         SoundManager.getInstance().answerSoundChanel = SoundManager.getInstance().answerSound.play(0, 1);
         SoundManager.getInstance().answerSoundChanel.volume = 1;
         this.levelScene.showLevelIcon(LevelDataManager.getInstance().GetMileStone());
         this.levelScene.visible = true;
-    }
+    };
     SceneGame.prototype.showResult = function (event) {
         egret.Tween.get(event.currentTarget).to({ scaleX: 1.2, scaleY: 1.2 }, 100).
             to({ scaleX: 1, scaleY: 1 }, 100);

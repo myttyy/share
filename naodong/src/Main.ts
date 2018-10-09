@@ -28,10 +28,13 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 class Main extends eui.UILayer {
+    // private player:PlayerData;
+    // private isMD:boolean = false;
     protected createChildren(): void {
         super.createChildren();
         egret.lifecycle.addLifecycleListener((context) => {
             // custom lifecycle plugin
+
         })
 
         egret.lifecycle.onPause = () => {
@@ -56,6 +59,15 @@ class Main extends eui.UILayer {
          (wx as any).updateShareMenu({
         withShareTicket: true
       });
+        try{
+            if(wx.getUpdateManager())
+            {
+                var updateManager = wx.getUpdateManager();
+                updateManager.onCheckForUpdate(function(res){console.warn("onCheckForUpdate",res.hasUpdate)});
+                updateManager.onUpdateReady(function(){updateManager.applyUpdate()});
+                updateManager.onUpdateFailed(function(){})}
+            }
+            catch(ex){}
         await this.loadResource();
         this.createGameScene();
         const result = await RES.getResAsync("description_json");
@@ -65,8 +77,8 @@ class Main extends eui.UILayer {
         const userInfo = await (platform as any).getAVUserInfo();
         console.log("游戏初始化");
         console.log("用户信息" + userInfo);
-        await (platform as any).shareCloud();
-        await (platform as any).shouAD();//广告
+        await (platform as any).shareCloud();//分享开启
+        // await (platform as any).shouAD();//广告
         
         
     }
@@ -102,6 +114,7 @@ class Main extends eui.UILayer {
      * Create scene interface
      */
 
+  private btnOpen:eui.Button;
   protected createGameScene(): void {
                 console.log("游戏初始化了");
                 SoundManager.getInstance();
@@ -112,6 +125,17 @@ class Main extends eui.UILayer {
                 LevelDataManager.getInstance().curIcon = data;
                 SceneGame.getInstance().InitLevel(data);
                 console.log(data);
+                LevelDataManager.getInstance().getAd();//手动拉AD
+
+
+                this.btnOpen = new eui.Button();
+                this.btnOpen.label = "btnClose!";
+                this.btnOpen.x = 50;
+                this.btnOpen.y = 35;
+                this.btnOpen.horizontalCenter = 0;
+                this.addChild(this.btnOpen);
+                this.btnOpen.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onButtonClick, this);
+                console.log("aaaaaa");
     }
 
   
@@ -159,11 +183,49 @@ class Main extends eui.UILayer {
      * 点击按钮
      * Click the button
      */
+    private rankingListMask: egret.Shape;
+    private bitmap: egret.Bitmap;
+    private isdisplay = false;
     private onButtonClick(e: egret.TouchEvent) {
-        let panel = new eui.Panel();
-        panel.title = "Title";
-        panel.horizontalCenter = 0;
-        panel.verticalCenter = 0;
-        this.addChild(panel);
+            console.log('点击btnClose按钮');
+        let platform: any = window.platform;
+        if (this.isdisplay) {
+            this.bitmap.parent && this.bitmap.parent.removeChild(this.bitmap);
+            this.rankingListMask.parent && this.rankingListMask.parent.removeChild(this.rankingListMask);
+            this.isdisplay = false;
+            platform.openDataContext.postMessage({
+                isDisplay: this.isdisplay,
+                text: 'hello',
+                year: (new Date()).getFullYear(),
+                command: "close",
+                type:"closedata"
+            });
+        } else {
+            //处理遮罩，避免开放数据域事件影响主域。
+            this.rankingListMask = new egret.Shape();
+            this.rankingListMask.graphics.beginFill(0x000000, 1);
+            this.rankingListMask.graphics.drawRect(0, 0, this.stage.width, this.stage.height);
+            this.rankingListMask.graphics.endFill();
+            this.rankingListMask.alpha = 0.5;
+            this.rankingListMask.touchEnabled = true;
+            this.addChild(this.rankingListMask);
+
+            //简单实现，打开这关闭使用一个按钮。
+            this.addChild(this.btnOpen);
+            //主要示例代码开始
+            this.bitmap = platform.openDataContext.createDisplayObject(null, this.stage.stageWidth, this.stage.stageHeight);
+            this.addChild(this.bitmap);
+            //主域向子域发送自定义消息
+            platform.openDataContext.postMessage({
+                isDisplay: this.isdisplay,
+                text: 'hello',
+                year: (new Date()).getFullYear(),
+                command: "open",
+                type:"opendata"
+            });
+            //主要示例代码结束            
+            this.isdisplay = true;
+        }
+ 
     }
 }
